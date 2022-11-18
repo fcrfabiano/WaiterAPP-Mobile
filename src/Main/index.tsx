@@ -1,6 +1,15 @@
-import { Container, CategoriesContainer, MenuContainer, Footer, FooterContainer } from './styles';
+import {
+  Container,
+  CategoriesContainer,
+  MenuContainer,
+  Footer,
+  FooterContainer,
+} from './styles';
 
 import { Header } from '../components/Header';
+import { Menu } from '../components/Menu';
+import { Categories } from '../components/Categories';
+import { Button } from '../components/Button';
 
 export function Main() {
   return (
@@ -8,14 +17,20 @@ export function Main() {
       <Container>
         <Header />
 
-        <CategoriesContainer />
+        <CategoriesContainer>
+          <Categories />
+        </CategoriesContainer>
 
-        <MenuContainer />
-
+        <MenuContainer>
+          <Menu />
+        </MenuContainer>
       </Container>
+
       <Footer>
         <FooterContainer>
-
+          <Button onPress={ () => alert('Novo pedido') }>
+            Botão
+          </Button>
         </FooterContainer>
       </Footer>
     </>
