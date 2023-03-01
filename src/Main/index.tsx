@@ -15,19 +15,20 @@ import { useState } from 'react';
 import { Cart } from '../Cart';
 import { CartItem } from '../types/CartItem';
 import { products } from '../mocks/products';
+import { Product } from '../types/Product';
 
 export function Main() {
   const [isTableModalVisible, setIsTableModalVisible] = useState(false);
   const [selectedTable, setSelectedTable] = useState('');
   const [cartItems, setCartItems] = useState<CartItem[]>([
-    {
-      quantity: 1,
-      product: products[0]
-    },
-    {
-      quantity: 2,
-      product: products[1]
-    }
+    // {
+    //   quantity: 1,
+    //   product: products[0]
+    // },
+    // {
+    //   quantity: 2,
+    //   product: products[1]
+    // }
   ]);
 
   function handleSaveTable(tableNumber: string) {
@@ -36,6 +37,33 @@ export function Main() {
 
   function handleCancelOrder() {
     setSelectedTable('');
+  }
+
+  function handleAddToCart(product: Product) {
+    if (!selectedTable) {
+      setIsTableModalVisible(true);
+    }
+
+    setCartItems((prevState) => {
+      const itemIndex = prevState.findIndex(
+        (cartItem) => cartItem.product._id === product._id
+      );
+
+      if (itemIndex < 0) return prevState.concat({
+        quantity: 1,
+        product,
+      });
+
+      const newCartItems = [...prevState];
+      const item = prevState[itemIndex];
+
+      newCartItems[itemIndex] = {
+        ...item,
+        quantity: item.quantity + 1,
+      };
+
+      return newCartItems;
+    });
   }
 
   return (
@@ -51,7 +79,7 @@ export function Main() {
         </CategoriesContainer>
 
         <MenuContainer>
-          <Menu />
+          <Menu onAddToCart={handleAddToCart} />
         </MenuContainer>
       </Container>
 
@@ -63,7 +91,9 @@ export function Main() {
             </Button>
           )}
 
-          {selectedTable && <Cart cartItems={cartItems} />}
+          {selectedTable && (
+            <Cart cartItems={cartItems} onAddToCart={handleAddToCart} />
+          )}
         </FooterContainer>
       </Footer>
 
