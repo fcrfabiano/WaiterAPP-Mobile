@@ -8,7 +8,16 @@ import { OrderConfirmedModal } from '../OrderConfirmedModal';
 import { CartItem } from '../types/CartItem';
 import { Product } from '../types/Product';
 import { formatPrice } from '../utils/format';
-import { Actions, Image, Item, ProductContainer, ProductDetails, QuantityContainer, Summary, TotalContainer } from './styles';
+import {
+  Actions,
+  Image,
+  Item,
+  ProductContainer,
+  ProductDetails,
+  QuantityContainer,
+  Summary,
+  TotalContainer,
+} from './styles';
 
 interface CartProps {
   cartItems: CartItem[];
@@ -17,8 +26,14 @@ interface CartProps {
   onConfirmOrder: () => void;
 }
 
-export function Cart({ cartItems, onAddToCart, onDecrement, onConfirmOrder }: CartProps) {
-  const [isOrderConfirmedModalVisible, setIsOrderConfirmedModalVisible] = useState(false);
+export function Cart({
+  cartItems,
+  onAddToCart,
+  onDecrement,
+  onConfirmOrder,
+}: CartProps) {
+  const [isOrderConfirmedModalVisible, setIsOrderConfirmedModalVisible] =
+    useState(false);
 
   const total = cartItems.reduce(
     (acc, curr) => acc + curr.quantity * curr.product.price,
@@ -112,7 +127,7 @@ export function Cart({ cartItems, onAddToCart, onDecrement, onConfirmOrder }: Ca
             </Text>
           )}
         </TotalContainer>
-        <Button onPress={handleConfirmOrder} disabled={cartItems.length === 0}>
+        <Button onPress={handleConfirmOrder} disabled={cartItems.length === 0} loading={true}>
           Confirmar Pedido
         </Button>
       </Summary>

@@ -23,6 +23,7 @@ export function Main() {
 
   function handleSaveTable(tableNumber: string) {
     setSelectedTable(tableNumber);
+    setIsTableModalVisible(false);
   }
 
   function handleResetOrder() {
