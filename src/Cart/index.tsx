@@ -1,8 +1,10 @@
-import { FlatList, TouchableOpacity } from 'react-native';
+import { useState } from 'react';
+import { Alert, FlatList, TouchableOpacity } from 'react-native';
 import { Button } from '../components/Button';
 import { MinusCircle } from '../components/Icons/MinusCircle';
 import { PlusCircle } from '../components/Icons/PlusCircle';
 import { Text } from '../components/Text';
+import { OrderConfirmedModal } from '../OrderConfirmedModal';
 import { CartItem } from '../types/CartItem';
 import { Product } from '../types/Product';
 import { formatPrice } from '../utils/format';
@@ -12,16 +14,42 @@ interface CartProps {
   cartItems: CartItem[];
   onAddToCart: (product: Product) => void;
   onDecrement: (product: Product) => void;
+  onConfirmOrder: () => void;
 }
 
-export function Cart({ cartItems, onAddToCart, onDecrement }: CartProps) {
+export function Cart({ cartItems, onAddToCart, onDecrement, onConfirmOrder }: CartProps) {
+  const [isOrderConfirmedModalVisible, setIsOrderConfirmedModalVisible] = useState(false);
+
   const total = cartItems.reduce(
     (acc, curr) => acc + curr.quantity * curr.product.price,
     0
   );
 
+  function handleConfirmOrder() {
+    Alert.alert(
+      'Confirmar',
+      'Confirmar Pedido?',
+      [
+        {
+          text: 'Confirmar',
+          onPress: () => setIsOrderConfirmedModalVisible(true),
+          style: 'cancel',
+        },
+      ],
+      {
+        cancelable: true,
+        onDismiss: () => setIsOrderConfirmedModalVisible(false),
+      }
+    );
+  }
+
   return (
     <>
+      <OrderConfirmedModal
+        visible={isOrderConfirmedModalVisible}
+        onOk={() => onConfirmOrder()}
+      />
+
       {cartItems.length > 0 && (
         <FlatList
           data={cartItems}
@@ -60,9 +88,7 @@ export function Cart({ cartItems, onAddToCart, onDecrement }: CartProps) {
                   <PlusCircle />
                 </TouchableOpacity>
 
-                <TouchableOpacity
-                  onPress={() => onDecrement(cartItem.product)}
-                >
+                <TouchableOpacity onPress={() => onDecrement(cartItem.product)}>
                   <MinusCircle />
                 </TouchableOpacity>
               </Actions>
@@ -86,10 +112,7 @@ export function Cart({ cartItems, onAddToCart, onDecrement }: CartProps) {
             </Text>
           )}
         </TotalContainer>
-        <Button
-          onPress={() => alert('Confirmar Pedido')}
-          disabled={cartItems.length === 0}
-        >
+        <Button onPress={handleConfirmOrder} disabled={cartItems.length === 0}>
           Confirmar Pedido
         </Button>
       </Summary>
