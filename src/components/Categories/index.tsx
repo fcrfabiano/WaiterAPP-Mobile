@@ -8,15 +8,17 @@ import { CategoryContainer, Icon } from './styles';
 
 interface CategoriesProps {
   categories: Category[];
+  onSelectCategory: (categoryId: string) => Promise<void>;
 }
 
-export function Categories({ categories }: CategoriesProps) {
+export function Categories({ categories, onSelectCategory }: CategoriesProps) {
   const [selectedCategory, setSelectedCategory] = useState('');
 
   function handleSelectedCategory(categoryId: string) {
-    setSelectedCategory((prevState) =>
-      prevState === categoryId ? '' : categoryId
-    );
+    const category = selectedCategory === categoryId ? '' : categoryId;
+
+    setSelectedCategory(category);
+    onSelectCategory(category);
   }
 
   return (
@@ -29,7 +31,7 @@ export function Categories({ categories }: CategoriesProps) {
       renderItem={({ item: category }) => {
         const isSelected = selectedCategory === category._id;
         return (
-          <CategoryContainer onPress={() => handleSelectedCategoryContainer(category._id)}>
+          <CategoryContainer onPress={() => handleSelectedCategory(category._id)}>
             <Icon>
               <Text opacity={isSelected ? 1 : 0.5}>{category.icon}</Text>
             </Icon>
